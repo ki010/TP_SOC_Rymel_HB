@@ -1,0 +1,5 @@
+PLL_Name	nios_system:NiosII|nios_system_clocks:clocks|altpll:DE_Clock_Generator_System|pll
+PLLJITTER	35
+PLLSPEmax	84
+PLLSPEmin	-53
+

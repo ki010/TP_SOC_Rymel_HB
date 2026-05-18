@@ -51,3 +51,8 @@ software/**/*.bin
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# VS Code
+.vscode/
+.vscode-test/
+*.code-workspace
