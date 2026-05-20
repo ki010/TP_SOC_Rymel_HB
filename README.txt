@@ -31,3 +31,14 @@ interface Avalon Conduit. Cette sortie peut servir à afficher directement la va
 être utilisée comme mot de commande pour une logique externe. Par exemple, dans une application de commande moteur.
 
 
+En suivant le même tutoriel, nous ajoutons un registre esclave de 32 bits qui sera utilisé cette fois pour piloter les deux moteurs droit et gauche. 
+Chaque moteur est commandé par un mot de 14 bits : la commande gauche est placée sur les bits [13:0] du registre, et la commande droite sur les bits 
+[29:16]. Les bits [15:14] et [31:30] restent inutilisés ou réservés. Le schéma motor_avalon_interface.png explicite ce fonctionnement.
+
+Dans chaque commande de 14 bits, le bit 13 correspond au bit d’activation du moteur. C’est donc ce bit qui lance réellement le mouvement. S'il vaut 1
+le signal PWM peut être appliqué. Le bit 12 indique le sens de rotation avec 0 pour forward. Enfin, les bits [11:0] définissent la consigne PWM sous 
+la forme de la durée de l’état haut du signal et donc la vitesse appliquée au moteur.
+
+Le processeur Nios II pilote ce registre par une écriture Avalon-MM. Une écriture est considérée comme valide lorsque le composant reg32 est sélectionné 
+par l’interconnect et que le signal write est actif. Dans ce cas, le mot présent sur writedata[31:0] est mémorisé dans le registre 32 bits. La logique 
+matérielle extrait ensuite deux champs de 14 bits. La commande moteur reste active tant qu’une nouvelle valeur n’est pas écrite dans le registre.

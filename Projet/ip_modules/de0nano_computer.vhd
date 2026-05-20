@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity de0nano_computer IS
     port (
-        SW : in STD_LOGIC_VECTOR(7 downto 0);
+        SW : in STD_LOGIC_VECTOR(3 downto 0);
         KEY : in STD_LOGIC_VECTOR(0 downto 0);
         CLOCK_50 : in STD_LOGIC;
 
@@ -34,7 +34,6 @@ architecture Structure of de0nano_computer is
         port (
             clk_clk          : in    std_logic                     := 'X';             -- clk
             reset_reset_n    : in    std_logic                     := 'X';             -- reset_n
-            led_export       : out   std_logic_vector(7 downto 0);                     -- export
             sw_export        : in    std_logic_vector(7 downto 0)  := (others => 'X'); -- export
             sdram_wire_addr  : out   std_logic_vector(12 downto 0);                    -- addr
             sdram_wire_ba    : out   std_logic_vector(1 downto 0);                     -- ba
@@ -45,8 +44,12 @@ architecture Structure of de0nano_computer is
             sdram_wire_dqm   : out   std_logic_vector(1 downto 0);                     -- dqm
             sdram_wire_ras_n : out   std_logic;                                        -- ras_n
             sdram_wire_we_n  : out   std_logic;                                        -- we_n
-            sdram_clk_clk   : out   std_logic;                                        -- clk
-            to_hex_export    : out   std_logic_vector(15 downto 0)                     -- export
+            sdram_clk_clk    : out   std_logic;                                        -- clk
+            to_hex_export       : out std_logic_vector(15 downto 0);                   -- export
+            motor_wire_dc_motor_p_r : out std_logic;                                   -- dc_motor_p_R
+            motor_wire_dc_motor_n_r : out std_logic;                                   -- dc_motor_n_R
+            motor_wire_dc_motor_p_l : out std_logic;                                   -- dc_motor_p_L
+            motor_wire_dc_motor_n_l : out std_logic                                    -- dc_motor_n_L
         );
     end component nios_system;
 
@@ -56,11 +59,16 @@ architecture Structure of de0nano_computer is
     signal clk_2k : std_logic;
 
     -- interfaces
-    signal leds_from_nios : std_logic_vector(7 downto 0);
     signal to_hex_sig : std_logic_vector(15 downto 0);
 
 
 begin
+------------------------------------------------
+-- activation carte robot
+------------------------------------------------
+MTR_Sleep_n <= '1';
+VCC3P3_PWRON_n <= '0';
+
 ------------------------------------------------
 -- NIOS
 ------------------------------------------------
@@ -72,8 +80,7 @@ NiosII: nios_system
         clk_clk => CLOCK_50,
         reset_reset_n => KEY(0),
 
-        led_export => leds_from_nios,
-        sw_export => SW,
+        sw_export => "0000" & SW,
 
         sdram_wire_addr => DRAM_ADDR,
         sdram_wire_ba => DRAM_BA,
@@ -85,7 +92,11 @@ NiosII: nios_system
         sdram_wire_ras_n => DRAM_RAS_N,
         sdram_wire_we_n => DRAM_WE_N,
         sdram_clk_clk => DRAM_CLK,
-        to_hex_export => to_hex_sig
+        to_hex_export => to_hex_sig,
+        motor_wire_dc_motor_p_r => MTRR_P,
+        motor_wire_dc_motor_n_r => MTRR_N,
+        motor_wire_dc_motor_p_l => MTRL_P,
+        motor_wire_dc_motor_n_l => MTRL_N
     );
 
 

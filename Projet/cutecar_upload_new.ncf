@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nios2_config version="1.0">
+    <system>
+        <system_info filepath="true">nios_system.qsys</system_info>
+        <system_sof filepath="true">de0nano_computer.sof</system_sof>
+        <system_jdi filepath="true">de0nano_computer.jdi</system_jdi>
+        <cable>USB-Blaster [USB-0]</cable>
+        <processor JTAGHubInstanceID="0">nios_II_cpu</processor>
+        <terminal JTAGHubInstanceID="0">JTAG</terminal>
+    </system>
+</nios2_config>
